@@ -186,6 +186,9 @@ for epoch in range(1, args.epochs+1):
     if prev_val_loss and val_loss > prev_val_loss:
         lr /= 4
     prev_val_loss = val_loss
+    if args.save != '':
+        with open(args.save, 'wb') as f:
+            torch.save(model, f)
 
 
 # Run on test data and save the model.
