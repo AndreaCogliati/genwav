@@ -65,7 +65,7 @@ for i in range(args.samples):
     sample_weights = output.squeeze().data.div(args.temperature).exp().cpu()
     next_sample = torch.multinomial(sample_weights, 1)[0]
     input.data.fill_(next_sample)
-    data.append(next_sample - 32768)
+    data.append(int(next_sample - 32768))
 
 wavfile.write(args.outf, 11025, np.array(data))
 
