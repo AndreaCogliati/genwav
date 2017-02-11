@@ -67,7 +67,7 @@ for i in range(args.samples):
     input.data.fill_(next_sample)
     data.append(next_sample - 32768)
 
-wavfile.write(args.outf, 11025, np.array(data)
+wavfile.write(args.outf, 11025, np.array(data))
 
 if i % args.log_interval == 0:
     print('| Generated {}/{} samples'.format(i, args.samples))
