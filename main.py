@@ -16,9 +16,9 @@ parser.add_argument('--data', type=str, default='data',
                     help='location of the data corpus')
 parser.add_argument('--model', type=str, default='LSTM',
                     help='type of recurrent net (RNN_TANH, RNN_RELU, LSTM, GRU)')
-parser.add_argument('--emsize', type=int, default=100,
+parser.add_argument('--emsize', type=int, default=200,
                     help='size of sample embeddings')
-parser.add_argument('--nhid', type=int, default=100,
+parser.add_argument('--nhid', type=int, default=200,
                     help='humber of hidden units per layer')
 parser.add_argument('--nlayers', type=int, default=2,
                     help='number of layers')
@@ -30,7 +30,7 @@ parser.add_argument('--epochs', type=int, default=6,
                     help='upper epoch limit')
 parser.add_argument('--batch-size', type=int, default=10, metavar='N',
                     help='batch size')
-parser.add_argument('--bptt', type=int, default=375,
+parser.add_argument('--bptt', type=int, default=11025,
                     help='sequence length')
 parser.add_argument('--seed', type=int, default=1111,
                     help='random seed')
