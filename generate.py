@@ -8,6 +8,8 @@
 import argparse
 import time
 import math
+import numpy as np
+import scipy.io.wavfile as wavfile
 
 import torch
 import torch.nn as nn
@@ -18,8 +20,8 @@ parser = argparse.ArgumentParser(description='PyTorch PTB Language Model')
 # Model parameters.
 parser.add_argument('--checkpoint', type=str, default='./model.pt',
                     help='model checkpoint to use')
-parser.add_argument('--outf', type=str, default='generated.txt',
-                    help='output file for generated text')
+parser.add_argument('--outf', type=str, default='generated.wav',
+                    help='output file for generated wav')
 parser.add_argument('--samples', type=int, default='1000',
                     help='number of samples to generate')
 parser.add_argument('--seed', type=int, default=1111,
@@ -51,20 +53,21 @@ if args.cuda:
 else:
     model.cpu()
 
-ntokens = 256
+ntokens = 65536
 hidden = model.init_hidden(1)
 input = Variable(torch.rand(1, 1).mul(ntokens).long(), volatile=True)
 if args.cuda:
     input.data = input.data.cuda()
 
-with open(args.outf, 'w') as outf:
-    for i in range(args.samples):
-        output, hidden = model(input, hidden)
-        sample_weights = output.squeeze().data.div(args.temperature).exp().cpu()
-        next_sample = torch.multinomial(sample_weights, 1)[0]
-        input.data.fill_(next_sample)
+data = []
+for i in range(args.samples):
+    output, hidden = model(input, hidden)
+    sample_weights = output.squeeze().data.div(args.temperature).exp().cpu()
+    next_sample = torch.multinomial(sample_weights, 1)[0]
+    input.data.fill_(next_sample)
+    data.append(next_sample - 32768)
 
-        outf.write('{}\n'.format(next_sample))
+wavfile.write(args.outf, 11025, np.array(data)
 
-        if i % args.log_interval == 0:
-            print('| Generated {}/{} samples'.format(i, args.samples))
+if i % args.log_interval == 0:
+    print('| Generated {}/{} samples'.format(i, args.samples))
